@@ -1,0 +1,14 @@
+1. Tasmociąg (conveyor):
+
+Problem jest modyfikacją problemu producenta i konsumenta wzbogacony o różną wielkość produktów. 
+Każdy robotnik to osobny wątek. Robotnik może albo odbierać cegły na górze albo wkładać je na dole. 
+
+Ci na dole wykonują funkcję putBrick(). W celu zapewnienia atomowości tylko jeden robotnik może wykonywać swoją czynność w jednym momencie - jest to zapewnione mutexem (conveyorMutex). W celu uniknięcia aktywnego czekania zastosowałem dwie zmienne warunkowe (full i empty). Robotnik na dole, którzy nie może wstawić cegly na taśmociąg 
+(while(conveyorLoadNow + weightOfThatBrick > 10)) czeka na zmiennej warunkowej full, aż robotnik na górze wyśle sygnał full informujący o tym, że taśmociąg nie jest już pełny.
+
+Analogicznie działają robotnicy na górze, kiedy taśmociąg jest pusty, czekają na zmiennej warunkowej empty, aż robotnik z doły wyśle sygnał pozwalący na wznowienie pracy.
+
+Liczba robotników na górze i na dole jest do dostosawania w kodzie, przed uruchomieniem programu. 
+
+Rozwiązanie to gwarantuje brak zakleszczenia procesów oraz brak aktywnego czekania, które często występuje w problemie producenta i konsumenta. Możliwe jest głodzenie procesów, które są w tej samej klasie (robotnik na dole/robotnik na górze ), nie jest to jednak (moim zdaniem) dużym problemem, gdyż najważniejsze w tym rozwiązaniu jest to, aby wyprodukowany produkt (cegła) jak najszybciej został zabrany z bufora (taśmociągu).
+
